@@ -1,9 +1,9 @@
 export type Member = {
   id: string;
   name: string;
-  username: string;
   age: number;
-  city: string;
+  address: string;
+  email: string;
   snack: string;
   reason: string;
   joinedAt: number;
@@ -25,10 +25,17 @@ export function getMemberCount(): number {
   return BASE + getMembers().length;
 }
 
-export function addMember(input: Omit<Member, "id" | "joinedAt">): Member {
+export function addMember(
+  input: Omit<Member, "id" | "joinedAt" | "snack"> & Partial<Pick<Member, "snack">>,
+): Member {
   const all = getMembers();
   const id = `BJP-${(BASE + all.length + 1).toString().padStart(6, "0")}`;
-  const member: Member = { ...input, id, joinedAt: Date.now() };
+  const member: Member = {
+    ...input,
+    id,
+    joinedAt: Date.now(),
+    snack: input.snack ?? "",
+  };
   all.push(member);
   localStorage.setItem(KEY, JSON.stringify(all));
   window.dispatchEvent(new CustomEvent("bjp:members-updated"));

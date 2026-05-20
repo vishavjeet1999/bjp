@@ -77,7 +77,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "Billa Janta Party — a satirical Gen-Z movement standing for clean homes, civic awareness, financial literacy and a smarter India. The loyal opposition to a certain six-legged ruling party.",
+          "Billa Janta Party — a satirical Gen-Z movement standing for clean homes, civic awareness, financial literacy and a smarter India. The loyal opposition to a certain six-legged party.",
       },
       { name: "author", content: "Billa Janta Party" },
       { property: "og:title", content: "Billa Janta Party — The Opposition India Deserves" },

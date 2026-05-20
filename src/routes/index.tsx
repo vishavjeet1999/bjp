@@ -111,7 +111,7 @@ function Hero() {
             className="mt-6 text-base sm:text-lg text-muted-foreground max-w-xl"
           >
             A Gen-Z party — opposition to a certain six-legged
-            ruling party. We stand for clean country, clear minds, and a smarter India.
+           party. We stand for clean country, clear minds, and a smarter India.
           </motion.p>
 
 
@@ -295,32 +295,32 @@ function Eligibility() {
   const [answers, setAnswers] = useState<boolean[]>(Array(questions.length).fill(false));
   const score = answers.filter(Boolean).length;
   const result = useMemo(() => {
-    const states = {
-      0: {
+    const states = [
+      {
         title: "Every movement starts with one Billa.",
         tone: "muted",
       },
-      1: {
+      {
         title: "Billa mindset detected.",
         tone: "muted",
       },
-      2: {
+      {
         title: "The nation could use more people like you.",
         tone: "ok",
       },
-      3: {
+      {
         title: "Strong anti-pest citizen energy.",
         tone: "good",
       },
-      4: {
+      {
         title: "Certified Billa. Built for a stronger India.",
         tone: "elite",
       },
-      5: {
+      {
         title: "Supreme Billa. Built to clean the system.",
         tone: "elite",
       },
-    };
+    ];
 
     return states[Math.min(score, 5)] ?? states[0];
   }, [score]);
@@ -409,14 +409,8 @@ function Eligibility() {
 // ---------- JOIN ----------
 const joinSchema = z.object({
   name: z.string().trim().min(2, "Name is too short").max(60),
-  username: z
-    .string()
-    .trim()
-    .min(2, "Username is too short")
-    .max(20)
-    .regex(/^[a-zA-Z0-9_.-]+$/, "Letters, numbers, _ . - only"),
   age: z.coerce.number().int().min(13, "Must be 13+").max(120),
-  city: z.string().trim().min(2, "Required").max(60),
+  address: z.string().trim().min(2, "Required").max(120),
   email: z.string().trim().email("Invalid email address").max(60),
   reason: z.string().trim().min(8, "Tell us a bit more").max(280),
 });
@@ -468,8 +462,8 @@ function Join({ onJoined }: { onJoined: () => void }) {
                   <Field label="Email" error={errors.email?.message} className="sm:col-span-2">
                     <Input {...register("email")} placeholder="Enter Email" />
                   </Field>
-                  <Field label="City" error={errors.city?.message} className="sm:col-span-2">
-                    <Input {...register("city")} placeholder="Enter City" />
+                  <Field label="Address" error={errors.address?.message} className="sm:col-span-2">
+                    <Input {...register("address")} placeholder="Enter Address" />
                   </Field>
                   <Field label="Why do you want to join?" error={errors.reason?.message} className="sm:col-span-2">
                     <Textarea
@@ -559,7 +553,7 @@ function Field({
 function MembershipCard({ member }: { member: Member | null }) {
   const id = member?.id ?? "BJP-XXXXXX";
   const name = member?.name ?? "Your Name Here";
-  const city = member?.city ?? "—";
+  const address = member?.address ?? "—";
   const issued = member ? new Date(member.joinedAt) : new Date();
   return (
     <motion.div
@@ -593,15 +587,25 @@ function MembershipCard({ member }: { member: Member | null }) {
         <div>
           <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Holder</div>
           <div className="text-xl sm:text-2xl font-display font-semibold mt-1">{name}</div>
-          <div className="text-xs text-muted-foreground mt-1">{city}</div>
+        </div>
+
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div>
+            <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Age</div>
+            <div className="font-mono text-sm mt-1">{member?.age ?? "—"}</div>
+          </div>
+          <div>
+            <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Email</div>
+            <div className="font-mono text-sm mt-1 break-all">{member?.email ?? "—"}</div>
+          </div>
         </div>
 
         <div className="flex items-end justify-between">
           <div>
             <div className="text-[10px] uppercase tracking-widest text-muted-foreground">
-              Member ID
+              Address
             </div>
-            <div className="font-mono text-sm mt-1">{id}</div>
+            <div className="font-mono text-sm mt-1 break-all">{address}</div>
           </div>
           <div className="text-right">
             <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Issued</div>
