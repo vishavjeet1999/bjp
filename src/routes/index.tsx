@@ -34,12 +34,114 @@ import { CatMascot } from "@/components/site/CatMascot";
 import { Counter } from "@/components/site/Counter";
 import { addMember, getMemberCount, type Member } from "@/lib/members";
 
+const LIVE_VISITOR_CONFIG = {
+  min: 1000,
+  max: 2000,
+  start: 1600,
+  anchor: Date.UTC(2026, 0, 1),
+  delayBaseMs: 15000,
+  delayVarianceMs: 10000,
+  deltaMin: 5,
+  deltaVariance: 6,
+};
+
+const BILLAS_JOINED_CONFIG = {
+  min: 5000,
+  max: 5000000,
+  start: 5000,
+  anchor: Date.UTC(2026, 0, 1),
+  delayBaseMs: 15000,
+  delayVarianceMs: 10000,
+  deltaMin: 5,
+  deltaVariance: 6,
+};
+
+function deterministicInt(seed: number, range: number) {
+  let x = seed ^ (seed << 13);
+  x = Math.imul(x, 0x5f356495) ^ (x >>> 17);
+  x = Math.imul(x, 0x52dce729) ^ (x << 5);
+  return Math.abs(x) % range;
+}
+
+function clamp(value: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, value));
+}
+
+function getSharedLiveVisitorCount(now = Date.now()) {
+  let elapsed = now - LIVE_VISITOR_CONFIG.anchor;
+  let count = LIVE_VISITOR_CONFIG.start;
+  let step = 0;
+
+  while (elapsed >= 0) {
+    const delay = LIVE_VISITOR_CONFIG.delayBaseMs + deterministicInt(step * 7 + 11, LIVE_VISITOR_CONFIG.delayVarianceMs);
+    if (elapsed < delay) {
+      return count;
+    }
+
+    const delta = LIVE_VISITOR_CONFIG.deltaMin + deterministicInt(step * 13 + 17, LIVE_VISITOR_CONFIG.deltaVariance);
+    const sign = deterministicInt(step * 19 + 23, 2) === 0 ? 1 : -1;
+    count = clamp(count + sign * delta, LIVE_VISITOR_CONFIG.min, LIVE_VISITOR_CONFIG.max);
+    elapsed -= delay;
+    step += 1;
+  }
+
+  return count;
+}
+
+function getSharedLiveVisitorDelay(now = Date.now()) {
+  let elapsed = now - LIVE_VISITOR_CONFIG.anchor;
+  let step = 0;
+
+  while (true) {
+    const delay = LIVE_VISITOR_CONFIG.delayBaseMs + deterministicInt(step * 7 + 11, LIVE_VISITOR_CONFIG.delayVarianceMs);
+    if (elapsed < delay) {
+      return delay - elapsed;
+    }
+    elapsed -= delay;
+    step += 1;
+  }
+}
+
+function getSharedBillasJoinedCount(now = Date.now()) {
+  let elapsed = now - BILLAS_JOINED_CONFIG.anchor;
+  let count = BILLAS_JOINED_CONFIG.start;
+  let step = 0;
+
+  while (elapsed >= 0) {
+    const delay = BILLAS_JOINED_CONFIG.delayBaseMs + deterministicInt(step * 7 + 11, BILLAS_JOINED_CONFIG.delayVarianceMs);
+    if (elapsed < delay) {
+      return count;
+    }
+
+    const delta = BILLAS_JOINED_CONFIG.deltaMin + deterministicInt(step * 13 + 17, BILLAS_JOINED_CONFIG.deltaVariance);
+    count = clamp(count + delta, BILLAS_JOINED_CONFIG.min, BILLAS_JOINED_CONFIG.max);
+    elapsed -= delay;
+    step += 1;
+  }
+
+  return count;
+}
+
+function getSharedBillasJoinedDelay(now = Date.now()) {
+  let elapsed = now - BILLAS_JOINED_CONFIG.anchor;
+  let step = 0;
+
+  while (true) {
+    const delay = BILLAS_JOINED_CONFIG.delayBaseMs + deterministicInt(step * 7 + 11, BILLAS_JOINED_CONFIG.delayVarianceMs);
+    if (elapsed < delay) {
+      return delay - elapsed;
+    }
+    elapsed -= delay;
+    step += 1;
+  }
+}
+
 export const Route = createFileRoute("/")({
   component: Index,
 });
 
 // ---------- HERO ----------
-function Hero() {
+function Hero({ liveVisitors, billasJoined }: { liveVisitors: number; billasJoined: number }) {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], [0, 120]);
@@ -105,7 +207,7 @@ function Hero() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
             </span>
-            · 112k Billas Online
+            {liveVisitors.toLocaleString()} Billas Online
           </motion.div>
 
           <motion.h1
@@ -161,7 +263,7 @@ function Hero() {
             className="mt-10 grid grid-cols-3 gap-3 sm:gap-6 max-w-xl"
           >
             {[
-              { label: "Billas Joined", value: 102470, suffix: " " },
+              { label: "Billas Joined", value: billasJoined, suffix: " " },
               { label: "Goals", value: 6, suffix: " " },
               { label: "Pest Tolerance", value: 0, suffix: "%" },
             ].map((s) => (
@@ -661,7 +763,8 @@ function SectionHeader({ eyebrow, title }: { eyebrow: string; title: string }) {
 
 function Index() {
   const [memberCount, setMemberCount] = useState(10247);
-  const [liveVisitors, setLiveVisitors] = useState(127);
+  const [liveVisitors, setLiveVisitors] = useState(getSharedLiveVisitorCount());
+  const [billasJoined, setBillasJoined] = useState(getSharedBillasJoinedCount());
 
   useEffect(() => {
     setMemberCount(getMemberCount());
@@ -670,23 +773,33 @@ function Index() {
     return () => window.removeEventListener("bjp:members-updated", onUpdate);
   }, []);
 
-  // Simulated live visitor counter
+  // Shared simulated live count based on a deterministic timestamp formula.
   useEffect(() => {
-    setLiveVisitors(80 + Math.floor(Math.random() * 80));
-    const id = setInterval(() => {
-      setLiveVisitors((v) => {
-        const delta = Math.floor(Math.random() * 7) - 3;
-        const next = v + delta;
-        return Math.max(40, Math.min(220, next));
-      });
-    }, 2800);
-    return () => clearInterval(id);
+    let timeoutId: number;
+    const updateCount = () => {
+      setLiveVisitors(getSharedLiveVisitorCount());
+      timeoutId = window.setTimeout(updateCount, getSharedLiveVisitorDelay());
+    };
+
+    updateCount();
+    return () => window.clearTimeout(timeoutId);
+  }, []);
+
+  useEffect(() => {
+    let timeoutId: number;
+    const updateCount = () => {
+      setBillasJoined(getSharedBillasJoinedCount());
+      timeoutId = window.setTimeout(updateCount, getSharedBillasJoinedDelay());
+    };
+
+    updateCount();
+    return () => window.clearTimeout(timeoutId);
   }, []);
 
   return (
     <main className="relative min-h-screen">
       <Navbar />
-      <Hero />
+      <Hero liveVisitors={liveVisitors} billasJoined={billasJoined} />
       <Vision />
       <Manifesto />
       <Eligibility />
