@@ -47,9 +47,10 @@ const LIVE_VISITOR_CONFIG = {
 
 const BILLAS_JOINED_CONFIG = {
   min: 5000,
-  max: 5000000,
+  max: 9000000,
   start: 5000,
-  anchor: Date.UTC(2026, 0, 1),
+  anchor: Date.UTC(2026, 0, 21),
+  targetDate: Date.UTC(2026, 6, 21),
   delayBaseMs: 15000,
   delayVarianceMs: 10000,
   deltaMin: 5,
@@ -103,23 +104,27 @@ function getSharedLiveVisitorDelay(now = Date.now()) {
 }
 
 function getSharedBillasJoinedCount(now = Date.now()) {
-  let elapsed = now - BILLAS_JOINED_CONFIG.anchor;
-  let count = BILLAS_JOINED_CONFIG.start;
-  let step = 0;
-
-  while (elapsed >= 0) {
-    const delay = BILLAS_JOINED_CONFIG.delayBaseMs + deterministicInt(step * 7 + 11, BILLAS_JOINED_CONFIG.delayVarianceMs);
-    if (elapsed < delay) {
-      return count;
-    }
-
-    const delta = BILLAS_JOINED_CONFIG.deltaMin + deterministicInt(step * 13 + 17, BILLAS_JOINED_CONFIG.deltaVariance);
-    count = clamp(count + delta, BILLAS_JOINED_CONFIG.min, BILLAS_JOINED_CONFIG.max);
-    elapsed -= delay;
-    step += 1;
+  if (now <= BILLAS_JOINED_CONFIG.anchor) {
+    return BILLAS_JOINED_CONFIG.start;
   }
 
-  return count;
+  const target = BILLAS_JOINED_CONFIG.targetDate;
+  const elapsed = now - BILLAS_JOINED_CONFIG.anchor;
+  const totalDuration = target - BILLAS_JOINED_CONFIG.anchor;
+
+  if (totalDuration <= 0) {
+    return BILLAS_JOINED_CONFIG.max;
+  }
+
+  if (now >= target) {
+    return BILLAS_JOINED_CONFIG.max;
+  }
+
+  const progress = clamp(elapsed / totalDuration, 0, 1);
+  const baseCount = BILLAS_JOINED_CONFIG.start + Math.floor((BILLAS_JOINED_CONFIG.max - BILLAS_JOINED_CONFIG.start) * progress);
+  const noise = deterministicInt(Math.floor(now / 10000), BILLAS_JOINED_CONFIG.deltaVariance);
+
+  return clamp(baseCount + noise, BILLAS_JOINED_CONFIG.min, BILLAS_JOINED_CONFIG.max);
 }
 
 function getSharedBillasJoinedDelay(now = Date.now()) {
