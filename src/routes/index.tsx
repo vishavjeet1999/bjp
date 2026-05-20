@@ -47,7 +47,7 @@ const LIVE_VISITOR_CONFIG = {
 
 const BILLAS_JOINED_CONFIG = {
   min: 5000,
-  max: 9000000,
+  max: 1000000,
   start: 5000,
   anchor: Date.UTC(2026, 0, 21),
   targetDate: Date.UTC(2026, 6, 21),
@@ -706,7 +706,7 @@ function MembershipCard({ member }: { member: Member | null }) {
         </div>
 
         <div>
-          <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Holder</div>
+          {/* <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Holder</div> */}
           <div className="text-xl sm:text-2xl font-display font-semibold mt-1">{name}</div>
         </div>
 
@@ -715,10 +715,10 @@ function MembershipCard({ member }: { member: Member | null }) {
             <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Age</div>
             <div className="font-mono text-sm mt-1">{member?.age ?? "—"}</div>
           </div>
-          <div>
+          {/* <div>
             <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Email</div>
             <div className="font-mono text-sm mt-1 break-all">{member?.email ?? "—"}</div>
-          </div>
+          </div> */}
         </div>
 
         <div className="flex items-end justify-between">
