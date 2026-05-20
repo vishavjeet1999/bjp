@@ -45,6 +45,20 @@ function Hero() {
   const y = useTransform(scrollYProgress, [0, 1], [0, 120]);
   const opacity = useTransform(scrollYProgress, [0, 1], [1, 0.2]);
   const [pos, setPos] = useState({ x: 0, y: 0 });
+  const [time, setTime] = useState("");
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      const hours = String(now.getHours()).padStart(2, "0");
+      const minutes = String(now.getMinutes()).padStart(2, "0");
+      const ampm = now.getHours() >= 12 ? "PM" : "AM";
+      setTime(`${hours}:${minutes} ${ampm}`);
+    };
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
@@ -178,7 +192,7 @@ function Hero() {
               transition={{ delay: 0.9 }}
               className="absolute -left-4 top-10 glass rounded-xl px-3 py-2 text-xs flex items-center gap-2"
             >
-              <Moon className="h-3.5 w-3.5 text-primary" /> 02:47 AM
+              <Moon className="h-3.5 w-3.5 text-primary" /> {time || "00:00 AM"}
             </motion.div>
             <motion.div
               initial={{ opacity: 0, y: 10 }}
