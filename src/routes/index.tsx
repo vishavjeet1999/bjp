@@ -253,7 +253,7 @@ function Hero({ liveVisitors, billasJoined }: { liveVisitors: number; billasJoin
             </Button>
           </motion.div>
 
-          <motion.div
+          {/* <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7, duration: 0.6 }}
@@ -273,7 +273,7 @@ function Hero({ liveVisitors, billasJoined }: { liveVisitors: number; billasJoin
                 </div>
               </div>
             ))}
-          </motion.div>
+          </motion.div> */}
 
         </div>
 
