@@ -265,12 +265,12 @@ function Hero({ liveVisitors, billasJoined }: { liveVisitors: number; billasJoin
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7, duration: 0.6 }}
-            className="mt-10 grid grid-cols-3 gap-3 sm:gap-6 max-w-xl"
+            className="mt-10 grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-6"
           >
             {[
-              { label: "Billas Joined", value: billasJoined, suffix: " " },
+              { label: "Members", value: billasJoined, suffix: " " },
               { label: "Goals", value: 6, suffix: " " },
-              { label: "Pest Tolerance", value: 0, suffix: "%" },
+              // { label: "Pest Tolerance", value: 0, suffix: "%" },
             ].map((s) => (
               <div key={s.label} className="glass rounded-2xl px-4 py-3">
                 <div className="text-2xl sm:text-3xl font-display font-bold text-gradient">
@@ -293,15 +293,15 @@ function Hero({ liveVisitors, billasJoined }: { liveVisitors: number; billasJoin
           <div className="absolute inset-6 rounded-full glow-violet" />
           <div className="relative glass rounded-[2rem] p-6 sm:p-10 h-full flex items-center justify-center">
             <CatMascot className="w-full h-full" />
-            <motion.div
+            {/* <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.9 }}
               className="absolute -left-4 top-10 glass rounded-xl px-3 py-2 text-xs flex items-center gap-2"
             >
               <Moon className="h-3.5 w-3.5 text-primary" /> {time || "00:00 AM"}
-            </motion.div>
-            <motion.div
+            </motion.div> */}
+            {/* <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.1 }}
@@ -309,7 +309,7 @@ function Hero({ liveVisitors, billasJoined }: { liveVisitors: number; billasJoin
             >
               <Shield className="h-3.5 w-3.5 text-accent" /> Pest-Free Zone
 
-            </motion.div>
+            </motion.div> */}
           </div>
         </motion.div>
       </motion.div>
@@ -516,7 +516,7 @@ function Eligibility() {
             </AnimatePresence>
             <Button
               onClick={() => document.querySelector("#join")?.scrollIntoView({ behavior: "smooth" })}
-              className="mt-auto rounded-xl bg-gradient-to-r from-primary to-amber-300 text-primary-foreground font-semibold"
+              className="mt-auto rounded-xl bg-gradient-to-r from-primary to-amber-300 text-primary-foreground font-semibold mt-10"
             >
               Join The Party <ArrowRight className="ml-1 h-4 w-4" />
             </Button>
