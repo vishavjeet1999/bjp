@@ -1,10 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { toast } from "sonner";
 import {
   Moon,
   Shield,
@@ -24,15 +20,11 @@ import {
   Bug,
 } from "lucide-react";
 
-
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
 import { Navbar } from "@/components/site/Navbar";
 import { CatMascot } from "@/components/site/CatMascot";
 import { Counter } from "@/components/site/Counter";
-import { addMember, getMemberCount, type Member } from "@/lib/members";
+import { getMemberCount } from "@/lib/members";
 
 const LIVE_VISITOR_CONFIG = {
   min: 1000,
@@ -181,7 +173,7 @@ function Hero({ liveVisitors, billasJoined }: { liveVisitors: number; billasJoin
     <section
       ref={ref}
       id="home"
-      className="relative min-h-screen flex items-center pt-28 pb-16 overflow-hidden"
+      className="relative lg:min-h-screen min-h-0 flex items-start lg:items-center pt-28 pb-16 overflow-hidden"
     >
       <div className="absolute inset-0 grid-bg pointer-events-none" />
       <motion.div
@@ -244,10 +236,10 @@ function Hero({ liveVisitors, billasJoined }: { liveVisitors: number; billasJoin
           >
             <Button
               size="lg"
-              onClick={() => document.querySelector("#join")?.scrollIntoView({ behavior: "smooth" })}
+              onClick={() => document.querySelector("#eligibility")?.scrollIntoView({ behavior: "smooth" })}
               className="rounded-xl bg-gradient-to-r from-primary to-amber-300 text-primary-foreground font-semibold glow-gold hover:opacity-95"
             >
-              Join The Party <ArrowRight className="ml-1 h-4 w-4" />
+              Check Eligibility <ArrowRight className="ml-1 h-4 w-4" />
             </Button>
             <Button
               size="lg"
@@ -514,229 +506,10 @@ function Eligibility() {
                 {result.title}
               </motion.p>
             </AnimatePresence>
-            <Button
-              onClick={() => document.querySelector("#join")?.scrollIntoView({ behavior: "smooth" })}
-              className="mt-auto rounded-xl bg-gradient-to-r from-primary to-amber-300 text-primary-foreground font-semibold mt-10"
-            >
-              Join The Party <ArrowRight className="ml-1 h-4 w-4" />
-            </Button>
           </div>
         </div>
       </div>
     </section>
-  );
-}
-
-// ---------- JOIN ----------
-const joinSchema = z.object({
-  name: z.string().trim().min(2, "Name is too short").max(60),
-  age: z.coerce.number().int().min(13, "Must be 13+").max(120),
-  address: z.string().trim().min(2, "Required").max(120),
-  email: z.string().trim().email("Invalid email address").max(60),
-  reason: z.string().trim().min(8, "Tell us a bit more").max(280),
-});
-type JoinValues = z.infer<typeof joinSchema>;
-
-function Join({ onJoined }: { onJoined: () => void }) {
-  const [submitted, setSubmitted] = useState<Member | null>(null);
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<JoinValues>({ resolver: zodResolver(joinSchema) });
-
-  const onSubmit = async (values: JoinValues) => {
-    await new Promise((r) => setTimeout(r, 900));
-    const m = addMember(values);
-    setSubmitted(m);
-    onJoined();
-    toast.success("Welcome to the opposition.", {
-      description: `Member ID ${m.id} issued.`,
-    });
-    reset();
-  };
-
-  return (
-    <section id="join" className="relative py-24 sm:py-32">
-      <div className="mx-auto max-w-6xl px-5">
-        <SectionHeader eyebrow="Join" title="Join the Movement and Save the Nation from Pests" />
-        <div className="mt-14 grid lg:grid-cols-[1fr_1fr] gap-6">
-          <div className="glass rounded-2xl p-6 sm:p-8">
-            <AnimatePresence mode="wait">
-              {!submitted ? (
-                <motion.form
-                  key="form"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  onSubmit={handleSubmit(onSubmit)}
-                  className="grid sm:grid-cols-2 gap-4"
-                  noValidate
-                >
-                  <Field label="Name" error={errors.name?.message}>
-                    <Input {...register("name")} placeholder="Enter Name" />
-                  </Field>
-                  <Field label="Age" error={errors.age?.message}>
-                    <Input type="number" inputMode="numeric" {...register("age")} placeholder="Enter Age" />
-                  </Field>
-                  <Field label="Email" error={errors.email?.message} className="sm:col-span-2">
-                    <Input {...register("email")} placeholder="Enter Email" />
-                  </Field>
-                  <Field label="Address" error={errors.address?.message} className="sm:col-span-2">
-                    <Input {...register("address")} placeholder="Enter Address" />
-                  </Field>
-                  <Field label="Why do you want to join?" error={errors.reason?.message} className="sm:col-span-2">
-                    <Textarea
-                      rows={4}
-                      {...register("reason")}
-                      placeholder="I want to join because..."
-                    />
-                  </Field>
-
-                  <div className="sm:col-span-2 flex items-center justify-between gap-4 pt-2">
-                    <Button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="rounded-xl bg-gradient-to-r from-primary to-amber-300 text-primary-foreground font-semibold glow-gold disabled:opacity-70"
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Issuing card…
-                        </>
-                      ) : (
-                        <>
-                          Submit application <ArrowRight className="ml-1 h-4 w-4" />
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                </motion.form>
-              ) : (
-                <motion.div
-                  key="success"
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="text-center py-10"
-                >
-                  <div className="mx-auto h-14 w-14 rounded-full bg-primary/15 border border-primary/30 flex items-center justify-center glow-gold">
-                    <Check className="h-7 w-7 text-primary" />
-                  </div>
-                  <h3 className="mt-6 text-2xl font-display font-semibold">
-                    Welcome, {submitted.name.split(" ")[0]}.
-                  </h3>
-                  <p className="mt-2 text-muted-foreground">
-                    The movement recognizes you. Your card has been issued.
-                  </p>
-                  <Button
-                    variant="outline"
-                    onClick={() => setSubmitted(null)}
-                    className="mt-6 rounded-xl border-white/15 bg-white/5"
-                  >
-                    Enroll another citizen
-
-                  </Button>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Live preview card */}
-          <div className="relative">
-            <MembershipCard member={submitted} />
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Field({
-  label,
-  error,
-  children,
-  className = "",
-}: {
-  label: string;
-  error?: string;
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <div className={className}>
-      <Label className="text-xs uppercase tracking-wider text-muted-foreground">{label}</Label>
-      <div className="mt-1.5">{children}</div>
-      {error && <p className="mt-1 text-xs text-destructive">{error}</p>}
-    </div>
-  );
-}
-
-function MembershipCard({ member }: { member: Member | null }) {
-  const id = member?.id ?? "BJP-XXXXXX";
-  const name = member?.name ?? "Your Name Here";
-  const address = member?.address ?? "—";
-  const issued = member ? new Date(member.joinedAt) : new Date();
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 24, rotate: -2 }}
-      whileInView={{ opacity: 1, y: 0, rotate: -2 }}
-      viewport={{ once: true }}
-      whileHover={{ rotate: 0, y: -4 }}
-      transition={{ duration: 0.6 }}
-      className="relative aspect-[1.6/1] w-full max-w-[520px] mx-auto rounded-2xl overflow-hidden border border-white/10 glow-violet"
-      style={{
-        background:
-          "linear-gradient(135deg, oklch(0.18 0.04 290) 0%, oklch(0.13 0.02 280) 60%), radial-gradient(circle at 80% 0%, oklch(0.85 0.16 85 / 0.35), transparent 60%)",
-      }}
-    >
-      <div className="absolute inset-0 grid-bg opacity-60" />
-      <div className="relative h-full p-6 flex flex-col justify-between">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="h-7 w-7 rounded-md bg-gradient-to-br from-primary to-accent flex items-center justify-center text-primary-foreground text-xs font-bold">
-              B
-            </span>
-            <div className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground">
-              Billa Janta Party
-            </div>
-          </div>
-          <div className="text-[10px] uppercase tracking-widest text-muted-foreground">
-            Membership
-          </div>
-        </div>
-
-        <div>
-          {/* <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Holder</div> */}
-          <div className="text-xl sm:text-2xl font-display font-semibold mt-1">{name}</div>
-        </div>
-
-        <div className="grid gap-3 sm:grid-cols-2">
-          <div>
-            <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Age</div>
-            <div className="font-mono text-sm mt-1">{member?.age ?? "—"}</div>
-          </div>
-          {/* <div>
-            <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Email</div>
-            <div className="font-mono text-sm mt-1 break-all">{member?.email ?? "—"}</div>
-          </div> */}
-        </div>
-
-        <div className="flex items-end justify-between">
-          <div>
-            <div className="text-[10px] uppercase tracking-widest text-muted-foreground">
-              Address
-            </div>
-            <div className="font-mono text-sm mt-1 break-all">{address}</div>
-          </div>
-          <div className="text-right">
-            <div className="text-[10px] uppercase tracking-widest text-muted-foreground">Issued</div>
-            <div className="font-mono text-sm mt-1">
-              {issued.toLocaleDateString(undefined, { day: "2-digit", month: "short", year: "numeric" })}
-            </div>
-          </div>
-        </div>
-      </div>
-    </motion.div>
   );
 }
 
@@ -802,13 +575,12 @@ function Index() {
   }, []);
 
   return (
-    <main className="relative min-h-screen">
+    <main className="relative lg:min-h-screen min-h-0">
       <Navbar />
       <Hero liveVisitors={liveVisitors} billasJoined={billasJoined} />
       <Vision />
       <Manifesto />
       <Eligibility />
-      <Join onJoined={() => setMemberCount(getMemberCount())} />
     </main>
   );
 }

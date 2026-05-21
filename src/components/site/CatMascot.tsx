@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import image from "./image2.png";
+import image from "./image.png";
 
 export function CatMascot({ className = "" }: { className?: string }) {
   return (

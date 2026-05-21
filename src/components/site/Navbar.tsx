@@ -7,7 +7,7 @@ const links = [
   { href: "#home", label: "Home" },
   { href: "#vision", label: "Vision" },
   { href: "#manifesto", label: "Manifesto" },
-  { href: "#join", label: "Join" },
+  { href: "#eligibility", label: "Eligibility" },
 ];
 
 export function Navbar() {
@@ -66,10 +66,10 @@ export function Navbar() {
 
         <div className="hidden md:block">
           <Button
-            onClick={() => go("#join")}
+            onClick={() => go("#eligibility")}
             className="rounded-xl bg-gradient-to-r from-primary to-amber-300 text-primary-foreground hover:opacity-90 font-semibold"
           >
-            Join The Party
+            Check Eligibility
           </Button>
         </div>
 
@@ -103,10 +103,10 @@ export function Navbar() {
               </a>
             ))}
             <Button
-              onClick={() => go("#join")}
+              onClick={() => go("#eligibility")}
               className="mt-2 rounded-xl bg-gradient-to-r from-primary to-amber-300 text-primary-foreground font-semibold"
             >
-              Join The Party
+              Check Eligibility
             </Button>
           </motion.div>
         )}
