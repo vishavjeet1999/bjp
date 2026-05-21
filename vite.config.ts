@@ -5,6 +5,9 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
   plugins: [react(), tailwindcss(), tsconfigPaths()],
+  preview: {
+    allowedHosts: ["billajantaparty.in"],
+  },
   build: {
     target: "esnext",
     outDir: "dist",
