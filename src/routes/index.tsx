@@ -213,8 +213,7 @@ function Hero({ liveVisitors, billasJoined }: { liveVisitors: number; billasJoin
             transition={{ delay: 0.2, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             className="mt-6 text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.02] tracking-tight"
           >
-            {/* Every kitchen deserves a <span className="text-gradient">Billa.</span> */}
-            No more <span className="text-gradient">Pests </span> in the country.
+            No more <span className="text-gradient">Pests </span> in the politics.
           </motion.h1>
 
           <motion.p
@@ -223,8 +222,7 @@ function Hero({ liveVisitors, billasJoined }: { liveVisitors: number; billasJoin
             transition={{ delay: 0.35, duration: 0.7 }}
             className="mt-6 text-base sm:text-lg text-muted-foreground max-w-xl"
           >
-            A Gen-Z party — opposition to a certain six-legged
-           party. We stand for clean country, clear minds, and a smarter India.
+            A Gen-Z party — We stand for pest free politics, clear minds, and a smarter India.
           </motion.p>
 
 
@@ -252,29 +250,6 @@ function Hero({ liveVisitors, billasJoined }: { liveVisitors: number; billasJoin
               Read Manifesto
             </Button>
           </motion.div>
-
-          {/* <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7, duration: 0.6 }}
-            className="mt-10 grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-6"
-          >
-            {[
-              { label: "Members", value: billasJoined, suffix: " " },
-              { label: "Goals", value: 6, suffix: " " },
-              // { label: "Pest Tolerance", value: 0, suffix: "%" },
-            ].map((s) => (
-              <div key={s.label} className="glass rounded-2xl px-4 py-3">
-                <div className="text-2xl sm:text-3xl font-display font-bold text-gradient">
-                  <Counter to={s.value} suffix={s.suffix} />
-                </div>
-                <div className="text-[11px] sm:text-xs uppercase tracking-wider text-muted-foreground mt-1">
-                  {s.label}
-                </div>
-              </div>
-            ))}
-          </motion.div> */}
-
         </div>
 
         {/* Mascot */}
@@ -285,23 +260,6 @@ function Hero({ liveVisitors, billasJoined }: { liveVisitors: number; billasJoin
           <div className="absolute inset-6 rounded-full glow-violet" />
           <div className="relative glass rounded-[2rem] p-6 sm:p-10 h-full flex items-center justify-center">
             <CatMascot className="w-full h-full" />
-            {/* <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.9 }}
-              className="absolute -left-4 top-10 glass rounded-xl px-3 py-2 text-xs flex items-center gap-2"
-            >
-              <Moon className="h-3.5 w-3.5 text-primary" /> {time || "00:00 AM"}
-            </motion.div> */}
-            {/* <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.1 }}
-              className="absolute -right-3 bottom-12 glass rounded-xl px-3 py-2 text-xs flex items-center gap-2"
-            >
-              <Shield className="h-3.5 w-3.5 text-accent" /> Pest-Free Zone
-
-            </motion.div> */}
           </div>
         </motion.div>
       </motion.div>
