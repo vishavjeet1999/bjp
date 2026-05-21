@@ -25,6 +25,7 @@ import { Navbar } from "@/components/site/Navbar";
 import { CatMascot } from "@/components/site/CatMascot";
 import { Counter } from "@/components/site/Counter";
 import { getMemberCount } from "@/lib/members";
+import AdsenseAd from "./adsenceAdd";
 
 const LIVE_VISITOR_CONFIG = {
   min: 1000,
@@ -277,7 +278,7 @@ const visionItems = [
 
 function Vision() {
   return (
-    <section id="vision" className="relative py-24 sm:py-32">
+    <section id="vision" className="relative pt-24 sm:pt-32">
       <div className="mx-auto max-w-7xl px-5">
         <SectionHeader eyebrow="Our Vision" title="Built to protect the country from pests" />
         <div className="mt-14 grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -318,7 +319,7 @@ const manifestoItems = [
 
 function Manifesto() {
   return (
-    <section id="manifesto" className="relative py-24 sm:py-32">
+    <section id="manifesto" className="relative">
       <div className="mx-auto max-w-7xl px-5">
         <SectionHeader eyebrow="Manifesto" title="The Anti-Pest Manifesto" />
         <div className="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -397,7 +398,7 @@ function Eligibility() {
   }, [score]);
 
   return (
-    <section id="eligibility" className="relative py-24 sm:py-32">
+    <section id="eligibility" className="relative">
       <div className="mx-auto max-w-5xl px-5">
         <SectionHeader eyebrow="Eligibility" title="Are you a Billa?" />
         <div className="mt-14 grid lg:grid-cols-[1.1fr_0.9fr] gap-6">
@@ -537,8 +538,11 @@ function Index() {
       <Navbar />
       <Hero liveVisitors={liveVisitors} billasJoined={billasJoined} />
       <Vision />
+      <AdsenseAd />
       <Manifesto />
+      <AdsenseAd />
       <Eligibility />
+      <AdsenseAd />
     </main>
   );
 }
