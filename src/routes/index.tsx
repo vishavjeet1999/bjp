@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import {
   Moon,
@@ -25,7 +25,7 @@ import { Navbar } from "@/components/site/Navbar";
 import { CatMascot } from "@/components/site/CatMascot";
 import { Counter } from "@/components/site/Counter";
 import { getMemberCount } from "@/lib/members";
-import AdsenseAd from "./adsenceAdd";
+const AdsenseAd = lazy(() => import("./adsenceAdd"));
 
 const LIVE_VISITOR_CONFIG = {
   min: 1000,
@@ -538,11 +538,17 @@ function Index() {
       <Navbar />
       <Hero liveVisitors={liveVisitors} billasJoined={billasJoined} />
       <Vision />
-      <AdsenseAd />
+      <Suspense fallback={<div className="min-h-[320px] bg-background/5" />}>
+        <AdsenseAd />
+      </Suspense>
       <Manifesto />
-      <AdsenseAd />
+      <Suspense fallback={<div className="min-h-[320px] bg-background/5" />}>
+        <AdsenseAd />
+      </Suspense>
       <Eligibility />
-      <AdsenseAd />
+      <Suspense fallback={<div className="min-h-[320px] bg-background/5" />}>
+        <AdsenseAd />
+      </Suspense>
     </main>
   );
 }
