@@ -8,6 +8,7 @@ export function CatMascot({ className = "" }: { className?: string }) {
       alt="Billa mascot — a sleek nocturnal cat silhouette"
       width={400}
       height={400}
+      fetchPriority="high"
     />
     // <motion.svg
     //   viewBox="0 0 400 400"
