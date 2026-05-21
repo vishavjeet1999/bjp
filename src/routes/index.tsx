@@ -232,13 +232,13 @@ function Hero({ liveVisitors, billasJoined }: { liveVisitors: number; billasJoin
             transition={{ delay: 0.5, duration: 0.6 }}
             className="mt-8 flex flex-wrap gap-3"
           >
-            <Button
+            {/* <Button
               size="lg"
               onClick={() => document.querySelector("#eligibility")?.scrollIntoView({ behavior: "smooth" })}
               className="rounded-xl bg-gradient-to-r from-primary to-amber-300 text-primary-foreground font-semibold glow-gold hover:opacity-95"
             >
               Check Eligibility <ArrowRight className="ml-1 h-4 w-4" />
-            </Button>
+            </Button> */}
             <Button
               size="lg"
               variant="outline"

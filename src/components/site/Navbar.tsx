@@ -64,7 +64,7 @@ export function Navbar() {
           ))}
         </ul>
 
-        <div className="hidden md:block">
+        <div className="">
           <Button
             onClick={() => go("#eligibility")}
             className="rounded-xl bg-gradient-to-r from-primary to-amber-300 text-primary-foreground hover:opacity-90 font-semibold"
@@ -73,17 +73,17 @@ export function Navbar() {
           </Button>
         </div>
 
-        <button
+        {/* <button
           aria-label="Toggle menu"
           aria-expanded={open}
           className="md:hidden p-2 rounded-lg hover:bg-white/5"
           onClick={() => setOpen((o) => !o)}
         >
           {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
+        </button> */}
       </nav>
 
-      <AnimatePresence>
+      {/* <AnimatePresence>
         {open && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
@@ -110,7 +110,7 @@ export function Navbar() {
             </Button>
           </motion.div>
         )}
-      </AnimatePresence>
+      </AnimatePresence> */}
     </motion.header>
   );
 }
